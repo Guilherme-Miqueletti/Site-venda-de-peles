@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Venda de Peles 🦊</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-image: url('https://pbs.twimg.com/media/Fy4ihkvWwAE6UhX?format=jpg&name=large');
+      background-size: cover;
+      background-position: center;
+      color: white;
+    }
+
+    .container {
+      padding: 30px;
+      background-color: rgba(53, 33, 33, 0.6);
+      max-width: 600px;
+      margin: 40px auto;
+      border-radius: 15px;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 2em;
+    }
+
+    .pele-btn {
+      display: block;
+      background-color: #28a745;
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      margin: 8px 0;
+      font-size: 1em;
+      cursor: pointer;
+      width: 100%;
+      border-radius: 8px;
+      text-align: left;
+    }
+
+    .pele-btn:hover {
+      background-color: #218838;
+    }
+
+    .carrinho {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    .total {
+      font-size: 1.2em;
+      margin-top: 10px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-blue { background-color: #007bff; }
+    .btn-yellow { background-color: #ffc107; color: black; }
+    .btn-red { background-color: #dc3545; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Venda de Peles 🦊</h1>
+    <h3>Escolha as peles:</h3>
+    <H4>Oferecimento Servidor FEARZ</H4>
+
+    <button class="pele-btn" onclick="adicionar('Urso', 1750)">🐻 Urso / Unidade (1750 DZcoins)</button>
+    <button class="pele-btn" onclick="adicionar('Urso (2 unidades)', 3750)">🐻 Urso (2 unidades) (3750 DZcoins)</button>
+    <button class="pele-btn" onclick="adicionar('Javali', 840)">🐗 Javali (840 DZcoins)</button>
+    <button class="pele-btn" onclick="adicionar('Veado/Alce', 560)">🦌 Veado/Alce (560 DZcoins)</button>
+    <button class="pele-btn" onclick="adicionar('Lobo', 300)">🐺 Lobo (300 DZcoins)</button>
+    <button class="pele-btn" onclick="adicionar('Cabeça de Lobo', 875)">🐺 Cabeça de Lobo (875 DZcoins)</button>
+    <button class="pele-btn" onclick="adicionar('Rena', 625)">🦌 Rena (625 DZcoins)</button>
+    <button class="pele-btn" onclick="adicionar('Raposa', 200)">🦊 Raposa (200 DZcoins)</button>
+    <button class="pele-btn" onclick="adicionar('Vaca', 110)">🐄 Vaca/boi (110 DZcoins)</button>
+    <button class="pele-btn" onclick="adicionar('Porco', 120)">🐖 Porco (120 DZcoins)</button>
+    <button class="pele-btn" onclick="adicionar('Lebre', 100)">🐇 Lebre (100 DZcoins)</button>
+
+    <div class="carrinho">
+      <h3>Carrinho 🛒</h3>
+      <ul id="lista-carrinho"></ul>
+      <div class="total" id="total">Total: 0 DZcoins</div>
+      
+      <div class="buttons">
+        <button class="btn btn-blue" onclick="finalizarCompra()">✔️ Finalizar Compra</button>
+        <button class="btn btn-yellow" onclick="removerUltimo()">↩️ Remover Último</button>
+        <button class="btn btn-red" onclick="limparCarrinho()">🗑️ Limpar Carrinho</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let carrinho = [];
+    let total = 0;
+
+    function adicionar(nome, preco) {
+      carrinho.push({ nome, preco });
+      atualizarCarrinho();
+    }
+
+    function atualizarCarrinho() {
+      const lista = document.getElementById('lista-carrinho');
+      lista.innerHTML = "";
+      total = 0;
+
+      const agrupado = {};
+      carrinho.forEach(item => {
+        if (agrupado[item.nome]) {
+          agrupado[item.nome].quantidade++;
+          agrupado[item.nome].subtotal += item.preco;
+        } else {
+          agrupado[item.nome] = {
+            quantidade: 1,
+            preco: item.preco,
+            subtotal: item.preco
+          };
+        }
+        total += item.preco;
+      });
+
+      for (const nome in agrupado) {
+        const item = agrupado[nome];
+        const li = document.createElement('li');
+        li.textContent = `🔸 ${item.quantidade}x ${nome} - ${item.subtotal} DZcoins`;
+        lista.appendChild(li);
+      }
+
+      document.getElementById('total').textContent = `Total: ${total} DZcoins`;
+    }
+
+    function removerUltimo() {
+      if (carrinho.length > 0) {
+        carrinho.pop();
+        atualizarCarrinho();
+      } else {
+        alert("Carrinho já está vazio.");
+      }
+    }
+
+    function limparCarrinho() {
+      carrinho = [];
+      atualizarCarrinho();
+    }
+
+    function finalizarCompra() {
+      if (carrinho.length === 0) {
+        alert("Carrinho vazio!");
+        return;
+      }
+      alert(`Compra finalizada! Total: ${total} DZcoins`);
+      limparCarrinho();
+    }
+  </script>
+</body>
+</html>

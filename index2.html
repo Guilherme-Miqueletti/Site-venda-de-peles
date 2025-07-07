@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Venda de Peles</title>
+  <link rel="shortcut icon" href="logo.png" type="image/x-icon">
+  <style>
+    body {
+      background-image: url('https://pbs.twimg.com/media/GbTidIlWsAAQVZh?format=jpg&name=4096x4096');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      height: 100vh;
+      margin: 0;
+      color: white;
+      text-shadow: 2px 2px 4px #000;
+      font-family: Arial, sans-serif;
+    }
+    .conteudo {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 700px;
+      margin: 50px auto;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 15px;
+      background-color: #28a745;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .carrinho {
+      margin-top: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px;
+      border-radius: 10px;
+    }
+    .botoes-carrinho {
+      margin-top: 10px;
+    }
+    .botoes-carrinho button {
+      background-color: #007bff;
+      margin-right: 10px;
+    }
+    .botoes-carrinho button:hover {
+      background-color: #0056b3;
+    }
+    .botoes-carrinho .limpar {
+      background-color: #dc3545;
+    }
+    .botoes-carrinho .limpar:hover {
+      background-color: #c82333;
+    }
+    .botoes-carrinho .remover-ultimo {
+      background-color: #ffc107;
+      color: black;
+    }
+    .botoes-carrinho .remover-ultimo:hover {
+      background-color: #e0a800;
+    }
+  </style>
+</head>
+<body>
+  <div class="conteudo">
+    <h1>Venda de Peles 🦊</h1>
+
+    <div id="produtos">
+      <h2>Escolha as peles:</h2>
+
+      <button onclick="adicionarItem('Pele de Urso', 1750)">🐻 Urso / Unidade (1750 DZcoins)</button><br>
+      <button onclick="adicionarItem('Pele de Urso (2 unidades)', 3750)">🐻 Urso (2 unidades) (3750 DZcoins)</button><br>
+      <button onclick="adicionarItem('Pele de Javali', 840)">🐗 Javali (840 DZcoins)</button><br>
+      <button onclick="adicionarItem('Pele de Veado/Alce', 560)">🦌 Veado/Alce (560 DZcoins)</button><br>
+      <button onclick="adicionarItem('Pele de Lobo', 300)">🐺 Lobo (300 DZcoins)</button><br>
+      <button onclick="adicionarItem('Cabeça de Lobo', 875)">🐺 Cabeça de Lobo (875 DZcoins)</button><br>
+      <button onclick="adicionarItem('Pele de Rena', 625)">🫎 Rena (625 DZcoins)</button><br>
+      <button onclick="adicionarItem('Pele de Raposa', 200)">🦊 Raposa (200 DZcoins)</button><br>
+      <button onclick="adicionarItem('Pele de Lebre', 100)">🐇 Lebre 100 DZcoins</button><br>
+    </div>
+
+    <div class="carrinho">
+      <h2>Carrinho 🛒</h2>
+      <ul id="lista-carrinho">
+        <!-- Itens serão adicionados aqui -->
+      </ul>
+      <p><strong>Total:</strong> <span id="total">0</span> DZcoins</p>
+
+      <div class="botoes-carrinho">
+        <button onclick="finalizarCompra()">✅ Finalizar Compra</button>
+        <button class="remover-ultimo" onclick="removerUltimo()">↩️ Remover Último</button>
+        <button class="limpar" onclick="limparCarrinho()">🗑️ Limpar Carrinho</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let carrinho = [];
+    let total = 0;
+
+    function adicionarItem(nome, preco) {
+      carrinho.push({ nome, preco });
+      total += preco;
+      atualizarCarrinho();
+    }
+
+    function atualizarCarrinho() {
+      const listaCarrinho = document.getElementById('lista-carrinho');
+      listaCarrinho.innerHTML = '';
+
+      // Agrupar peles iguais
+      const resumo = {};
+      carrinho.forEach(item => {
+        if (resumo[item.nome]) {
+          resumo[item.nome].quantidade++;
+          resumo[item.nome].subtotal += item.preco;
+        } else {
+          resumo[item.nome] = { quantidade: 1, subtotal: item.preco };
+        }
+      });
+
+      for (const nome in resumo) {
+        const li = document.createElement('li');
+        li.textContent = `${resumo[nome].quantidade}x ${nome} - ${resumo[nome].subtotal} DZcoins`;
+        listaCarrinho.appendChild(li);
+      }
+
+      document.getElementById('total').textContent = total;
+    }
+
+    function finalizarCompra() {
+      if (carrinho.length === 0) {
+        alert('Seu carrinho está vazio!');
+        return;
+      }
+      alert(`Compra finalizada! Total: ${total} DZcoins.\nObrigado pela compra!`);
+      limparCarrinho();
+    }
+
+    function limparCarrinho() {
+      carrinho = [];
+      total = 0;
+      atualizarCarrinho();
+    }
+
+    function removerUltimo() {
+      if (carrinho.length === 0) {
+        alert('Seu carrinho está vazio!');
+        return;
+      }
+      const ultimo = carrinho.pop();
+      total -= ultimo.preco;
+      atualizarCarrinho();
+    }
+  </script>
+</body>
+</html>
